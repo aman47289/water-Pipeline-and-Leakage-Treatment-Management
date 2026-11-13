@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Water Pipeline and Leakage Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true"><i></i><i></i><i></i><svg class="wv" viewBox="0 0 2880 200" preserveAspectRatio="none"><path d="M0 100c120-60 240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0V200H0z"/></svg><svg class="wv b" viewBox="0 0 2880 200" preserveAspectRatio="none"><path d="M0 100c120-60 240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0V200H0z"/></svg></div>
+<aside>
+<div class="brand"><svg class="logo" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3FE0D2"/><stop offset=".55" stop-color="#2C9BF0"/><stop offset="1" stop-color="#6B5CFF"/></linearGradient></defs><circle class="rip" cx="24" cy="30" r="12" fill="none" stroke="url(#lg)" stroke-width="1.5"/><path d="M24 3C32 13 38 20 38 28a14 14 0 01-28 0c0-8 6-15 14-25z" fill="url(#lg)"/><path d="M17 31l7-7 7 5M24 24v-5.500" stroke="#04222B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="17" cy="31" r="2.600" fill="#04222B"/><circle cx="31" cy="29" r="2.600" fill="#04222B"/><circle cx="24" cy="24" r="2.600" fill="#04222B"/><circle cx="24" cy="18.500" r="2.600" fill="#fff"/></svg><div class="wm"><b>Water Pipeline</b><span>&amp; Leakage Management</span></div></div>
+<nav id="nav" aria-label="Sections"></nav>
+<div class="sens"><span class="dot"></span>11 of 11 sensors reporting</div>
+</aside>
+<main id="top">
+<div class="top">
+<div><h2 id="ttl">Network control room</h2><p id="sbt">Live view of 11 pipes across 8 junctions. Sample data for the prototype.</p></div>
+<div class="tools"><span class="clock" id="clock"></span><button class="btn" id="th" aria-label="Switch between light and dark theme">Switch theme</button></div>
+</div>
+<div id="v-dash"><section class="hero card"><h1>Water Pipeline<span>&amp; Leakage Management</span></h1><p>Watch the whole network, rank every leak by urgency and send crews along the shortest route.</p><div class="chips"><span class="chip"><i class="dot"></i>Live monitoring</span><span class="chip">SDG 13: Climate Action</span><span class="chip">Data Structures and Algorithms-II</span></div><svg class="hw" viewBox="0 0 2880 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100c120-60 240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0V200H0z"/></svg><svg class="hw b" viewBox="0 0 2880 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100c120-60 240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0s240-60 360 0s240 60 360 0V200H0z"/></svg></section>
+<section class="kpis" id="kpis"></section>
+<section class="grid">
+<div class="card" id="network">
+<div class="hd"><div><h3>Pipeline network</h3><p class="sub">Select a pipe for details, or a repair job below for the crew route.</p></div><button class="btn" id="sim">Simulate new leak</button></div>
+<svg id="map" viewBox="0 0 640 380" role="img" aria-label="Pipeline network schematic with flowing water"></svg>
+<div class="legend"><span style="--c:var(--red)"><i></i>Critical leak</span><span style="--c:var(--amb)"><i></i>High or medium leak</span><span style="--c:var(--acc)"><i></i>Repair or crew route</span><span style="--c:var(--flow)"><i></i>Normal flow</span></div>
+<div class="info" id="info" aria-live="polite">Select a pipe on the map, or a repair job below.</div>
+</div>
+<div class="col">
+<div class="card"><h3>Network health</h3>
+<div class="gauge" style="margin-top:8px"><svg id="gauge" viewBox="0 0 140 140" role="img" aria-label="Network health score"></svg><div><div class="state" id="state"></div><p class="sub">Falls as open leaks get more severe</p></div></div>
+<div class="tel" id="tel"></div></div>
+<div class="card" id="analytics"><h3>Leaks reported this week</h3><p class="sub">Count per day, last 7 days</p><div class="bars" id="bars"></div></div>
+</div>
+</section>
+<section class="card" id="queue">
+<h3>Repair queue</h3>
+<p class="sub" id="fml"></p>
+<div class="wrap"><table><thead><tr><th>Rank</th><th>Leak</th><th>Location</th><th>Severity</th><th>Score</th><th>How it adds up</th><th>Waiting</th></tr></thead><tbody id="rows"></tbody></table></div>
+<p class="sub" id="prog"></p>
+</section>
+</div>
+<div id="v-pipes" hidden><section class="grid">
+<div class="card"><h3>Pipe records</h3>
+<div class="bar"><input class="in" id="pq" type="search" placeholder="Search by ID, junction or material" aria-label="Search pipes" style="flex:1;min-width:180px"><select class="in" id="pf" aria-label="Filter by status" style="width:auto"><option>All</option><option>Normal</option><option>Leaking</option><option>Under repair</option><option>Inactive</option></select></div>
+<div class="wrap"><table><thead><tr><th>ID</th><th>Route</th><th>Material</th><th>Diameter</th><th>Length</th><th>Status</th><th>Action</th></tr></thead><tbody id="prows"></tbody></table></div></div>
+<div class="card"><h3>Add a pipe</h3><p class="sub" style="margin-bottom:12px">Connect two junctions with a new pipe.</p>
+<label class="f">From junction<select id="fa"></select></label>
+<label class="f">To junction<select id="fb"></select></label>
+<label class="f">Material<select id="fm"><option>PVC</option><option>Cast iron</option><option>HDPE</option><option>Steel</option></select></label>
+<label class="f">Diameter (mm)<input id="fd" type="number" min="1" value="200"></label>
+<label class="f">Length (km)<input id="fl" type="number" min="0.1" step="0.1" placeholder="1.5"></label>
+<button class="btn go" id="padd">Add pipe</button><p class="sub" id="pmsg" aria-live="polite"></p></div>
+</section></div>
+<div id="v-leaks" hidden><section class="grid">
+<div class="card"><h3>All leak reports</h3><p class="sub">Move each report from open to resolved.</p>
+<div class="wrap"><table><thead><tr><th>Leak</th><th>Location</th><th>Severity</th><th>Status</th><th>Score</th><th>Waiting</th><th>Action</th></tr></thead><tbody id="lrows"></tbody></table></div></div>
+<div class="card"><h3>Report a leak</h3><p class="sub" style="margin-bottom:12px">Choose where it is and how bad it looks.</p>
+<label class="f">Pipe<select id="lp"></select></label>
+<label class="f">Severity<select id="ls"><option value="">Select severity</option><option value="1">1 – Low, minor seep</option><option value="2">2 – Low, steady drip</option><option value="3">3 – Medium, visible flow</option><option value="4">4 – High, strong flow</option><option value="5">5 – Critical, burst</option></select></label>
+<label class="f">Affected area<select id="la"><option value="">Select affected area</option><option value="1">1 – A few homes</option><option value="2">2 – One street</option><option value="3">3 – A neighbourhood</option><option value="4">4 – Several neighbourhoods</option><option value="5">5 – Whole sector</option></select></label>
+<label class="f">Description (optional)<textarea id="ld" rows="3" maxlength="200" placeholder="What did you see?"></textarea></label>
+<button class="btn go" id="ladd">Report leak</button><p class="sub" id="lmsg" aria-live="polite"></p></div>
+</section></div>
+<div id="v-set" hidden><section class="grid">
+<div class="card"><h3>Priority scoring</h3><p class="sub" style="margin-bottom:12px">Score = severity weight × severity + area weight × affected area + waiting bonus. Changes reorder the repair queue straight away.</p>
+<label class="f">Severity weight<input id="s1" type="number" min="0" max="20" value="5"></label>
+<label class="f">Affected-area weight<input id="s2" type="number" min="0" max="20" value="2"></label>
+<label class="f">Hours of waiting per bonus point<input id="s3" type="number" min="1" max="48" value="4"></label>
+<label class="f">Maximum waiting bonus<input id="s4" type="number" min="0" max="50" value="10"></label>
+<button class="btn" id="srst">Restore defaults</button></div>
+<div class="card"><h3>Appearance</h3><p class="sub">Choose how the console looks.</p>
+<div class="bar"><button class="btn" data-th="light">Light</button><button class="btn" data-th="dark">Dark</button><button class="btn" data-th="">Match my device</button></div>
+<h3 style="margin-top:22px">About this prototype</h3><p class="sub">Everything here is sample data. Changes last only while this tab is open.</p></div>
+</section></div>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
