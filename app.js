@@ -39,7 +39,7 @@ s+=`<line class="pb ${selPipe==e[0]?"sel":""} ${cls=="off"?"off":""}" data-pipe=
 if(l&&l.st=="Open")m+=`<g style="--c:var(--${l.sev>=5?"red":"amb"})"><circle class="pulse" cx="${(a[1]+b[1])/2}" cy="${(a[2]+b[2])/2}" r="8"/><circle cx="${(a[1]+b[1])/2}" cy="${(a[2]+b[2])/2}" r="5" fill="var(--c)"/></g>`});
 if(route){const pts=route.map(k=>N[k][1]+","+N[k][2]);s+=`<polyline class="route" points="${pts.join(" ")}"/>`;
 if(!reduce)s+=`<circle r="6" fill="var(--acc)" style="filter:drop-shadow(0 0 8px var(--acc))"><animateMotion dur="3.5s" repeatCount="indefinite" path="M${pts.join(" L")}"/></circle>`}
-Object.entries(N).forEach(([k,n])=>{s+=`<circle class="node" cx="${n[1]}" cy="${n[2]}" r="${k==1?11:7}" ${k==1?'style="stroke:var(--acc);stroke-width:4"':""}/><text class="lbl" x="${n[1]}" y="${n[2]+(n[2]>200?27:-15)}" text-anchor="middle">${n[0]}</text>`});
+Object.entries(N).forEach(([k,n])=>{s+=`<circle class="node" cx="${n[1]}" cy="${n[2]}" r="${k==1?11:7}" style="${k==1?"stroke:var(--acc);stroke-width:4;":""}${TF[n[3]]?"fill:var("+TF[n[3]]+");":""}"/><text class="lbl" x="${n[1]}" y="${n[2]+(n[2]>200?27:-15)}" text-anchor="middle">${n[0]}</text>`});
 $("map").innerHTML=s+m;
 $("map").querySelectorAll(".pb").forEach(el=>{const go=()=>pickPipe(el.dataset.pipe);el.onclick=go;el.onkeydown=ev=>{if(ev.key=="Enter"||ev.key==" "){ev.preventDefault();go()}}})}
 
@@ -68,7 +68,7 @@ let rows="",r=1;while(h.size){const l=h.pop();rows+=`<tr class="row" tabindex="0
 $("rows").innerHTML=rows||`<tr><td colspan="7">No open leaks. New reports will appear here.</td></tr>`;
 $("prog").textContent=prog.length?"Crews on site: "+prog.map(l=>l.id+" at "+nm(pipeById[l.pipe])).join("; ")+".":"No crews on site.";
 $("rows").querySelectorAll(".row").forEach(el=>{const go=()=>pickLeak(el.dataset.leak);el.onclick=go;el.onkeydown=ev=>{if(ev.key=="Enter"||ev.key==" "){ev.preventDefault();go()}}});
-$("fml").textContent=`Most urgent first. Score = ${S.ws} × severity + ${S.wa} × affected area + waiting bonus (1 point per ${S.hp} hours, up to ${S.cap}).`;paintTel();drawMap()}
+$("fml").textContent=`Most urgent first. Score = ${S.ws} × severity + ${S.wa} × affected area + waiting bonus (1 point per ${S.hp} hours, up to ${S.cap}).`;$("sensn").textContent=`${E.filter(e=>M[e[0]].on).length} of ${E.length} pipes active`;paintTel();drawMap()}
 
 let seq=105;
 $("sim").onclick=()=>{const free=E.filter(e=>!leakOn(e[0]));if(!free.length){$("info").textContent="Every pipe already has a leak report.";return}
@@ -118,11 +118,31 @@ const KEY=["v:dash","g:network","g:queue","g:analytics","v:pipes","v:leaks","v:s
 function show(v){["dash","pipes","leaks","set"].forEach(k=>$("v-"+k).hidden=k!=v);
 const T={dash:["Network control room",`Live view of ${E.length} pipes across ${Object.keys(N).length} junctions. Sample data for the prototype.`],pipes:["Pipe records","Search, add and deactivate pipes. Inactive pipes are skipped when planning crew routes."],leaks:["Leak reports","Report a leak and move it from open to resolved."],set:["Settings","Tune how repairs are prioritised and how the console looks."]}[v];
 $("ttl").textContent=T[0];$("sbt").textContent=T[1];
-if(v=="pipes")renderPipes();if(v=="leaks"){renderLeaks();fillSel()}if(v=="dash")render()}
+if(v=="pipes"){renderPipes();renderStations()}if(v=="leaks"){renderLeaks();fillSel()}if(v=="dash")render()}
 function go(k){const [t,x]=k.split(":");document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.k==k));
 if(t=="v")show(x);else{show("dash");$(x).scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"})}}
 $("nav").innerHTML=IC.map((n,i)=>`<button data-k="${KEY[i]}" class="${i?"":"on"}"><svg viewBox="0 0 24 24" aria-hidden="true">${n[2]}</svg>${n[0]}</button>`).join("");
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>go(b.dataset.k));
 if(!reduce){const bg=document.querySelector(".bg");for(let i=0;i<16;i++){const b=document.createElement("b"),z=6+Math.random()*18;b.style.cssText=`left:${Math.random()*100}%;width:${z}px;height:${z}px;animation-duration:${14+Math.random()*16}s;animation-delay:-${Math.random()*24}s`;bg.appendChild(b)}}
+
+/* stations: add or remove points on the network */
+const TF={Reservoir:"--flow","Pump station":"--acc","Storage tank":"--amb"};
+N[1][3]="Depot";N[2][3]="Reservoir";N[5][3]="Pump station";N[8][3]="Storage tank";
+let nid=9;
+function fillJ(){const o=Object.entries(N).map(([k,n])=>`<option value="${k}">${n[0]}</option>`).join("");
+[["fa",o],["fb",o],["sc",`<option value="">Don’t connect yet</option>`+o]].forEach(([id,h])=>{const cur=$(id).value;$(id).innerHTML=h;if(cur&&N[cur])$(id).value=cur})}
+function renderStations(){$("srows").innerHTML=Object.entries(N).map(([k,n])=>{const deg=E.filter(e=>e[1]==k||e[2]==k).length;return `<tr><td>${n[0]}</td><td>${n[3]||"Junction"}</td><td>${deg}</td><td>${k==1||deg?"–":`<button class="btn" data-s="${k}">Remove</button>`}</td></tr>`}).join("");
+$("srows").querySelectorAll("button").forEach(b=>b.onclick=()=>{delete N[b.dataset.s];fillJ();renderStations();render()})}
+$("sx").oninput=()=>{$("sxo").textContent=$("sx").value};$("sy").oninput=()=>{$("syo").textContent=$("sy").value};
+$("sadd").onclick=()=>{const name=$("sn").value.trim(),x=Math.round(40+$("sx").value*5.6),y=Math.round(30+$("sy").value*3.1),c=$("sc").value,km=parseFloat($("sl").value);
+if(!name)return msg("smsg","Enter a name for the station.");
+if(/[<>&"'`]/.test(name))return msg("smsg","Please avoid the characters < > & and quotation marks in the name.");
+if(Object.values(N).some(n=>n[0].toLowerCase()==name.toLowerCase()))return msg("smsg","A station with this name already exists.");
+const near=Object.values(N).find(n=>Math.hypot(n[1]-x,n[2]-y)<46);if(near)return msg("smsg",`Too close to ${near[0]}. Move the sliders to a free spot.`);
+if(c&&!(km>0))return msg("smsg","Enter the pipe length in km to connect this station.");
+const id=nid++;N[id]=[name,x,y,$("st").value];let t=`Added ${name}.`;
+if(c){const pid="P"+(E.length+1),e=[pid,+c,id,km];E.push(e);pipeById[pid]=e;M[pid]={mat:"PVC",dia:200,on:true};t+=` Connected with ${pid}.`}
+msg("smsg",t+" You can see it on the Dashboard map.");$("sn").value="";$("sl").value="";fillJ();renderPipes();renderStations();render()};
+
 setInterval(()=>{tel.inflow=4.2+(Math.random()-.5)*.2;tel.pressure=3.1+(Math.random()-.5)*.15;paintTel()},2200);
 render();
