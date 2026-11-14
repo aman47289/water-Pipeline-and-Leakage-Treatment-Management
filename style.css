@@ -121,3 +121,4 @@ td .btn{padding:5px 11px;font-size:13px}
 .hero .hw.b{height:44px;fill:var(--acc);opacity:.16;animation-duration:22s;animation-direction:reverse}
 @media (prefers-reduced-motion:reduce){.hero h1,.bg .wv,.hero .hw,.rip{animation:none}.bg b{display:none}}
 @media (max-width:760px){.wm{display:none}.hero{padding:22px 18px 54px}}
+.f input[type=range]{accent-color:var(--acc);padding:0}
