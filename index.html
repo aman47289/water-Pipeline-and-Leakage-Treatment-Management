@@ -13,7 +13,7 @@
 <aside>
 <div class="brand"><svg class="logo" viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3FE0D2"/><stop offset=".55" stop-color="#2C9BF0"/><stop offset="1" stop-color="#6B5CFF"/></linearGradient></defs><circle class="rip" cx="24" cy="30" r="12" fill="none" stroke="url(#lg)" stroke-width="1.5"/><path d="M24 3C32 13 38 20 38 28a14 14 0 01-28 0c0-8 6-15 14-25z" fill="url(#lg)"/><path d="M17 31l7-7 7 5M24 24v-5.500" stroke="#04222B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="17" cy="31" r="2.600" fill="#04222B"/><circle cx="31" cy="29" r="2.600" fill="#04222B"/><circle cx="24" cy="24" r="2.600" fill="#04222B"/><circle cx="24" cy="18.500" r="2.600" fill="#fff"/></svg><div class="wm"><b>Water Pipeline</b><span>&amp; Leakage Management</span></div></div>
 <nav id="nav" aria-label="Sections"></nav>
-<div class="sens"><span class="dot"></span>11 of 11 sensors reporting</div>
+<div class="sens"><span class="dot"></span><span id="sensn">11 of 11 pipes active</span></div>
 </aside>
 <main id="top">
 <div class="top">
@@ -54,6 +54,18 @@
 <label class="f">Diameter (mm)<input id="fd" type="number" min="1" value="200"></label>
 <label class="f">Length (km)<input id="fl" type="number" min="0.1" step="0.1" placeholder="1.5"></label>
 <button class="btn go" id="padd">Add pipe</button><p class="sub" id="pmsg" aria-live="polite"></p></div>
+</section>
+<section class="grid" style="margin-top:14px">
+<div class="card"><h3>Stations and junctions</h3><p class="sub">Every point where pipes meet or water is stored. A station can be removed only while no pipe is connected to it.</p>
+<div class="wrap"><table><thead><tr><th>Name</th><th>Type</th><th>Pipes</th><th>Action</th></tr></thead><tbody id="srows"></tbody></table></div></div>
+<div class="card"><h3>Add a station</h3><p class="sub" style="margin-bottom:12px">Place a new point on the map, and connect it to an existing station if you like.</p>
+<label class="f">Name<input id="sn" type="text" maxlength="24" placeholder="Sector 9 Pump"></label>
+<label class="f">Type<select id="st"><option>Junction</option><option>Reservoir</option><option>Pump station</option><option>Storage tank</option></select></label>
+<label class="f">Left to right (<output id="sxo">50</output>%)<input id="sx" type="range" min="5" max="95" value="50"></label>
+<label class="f">Top to bottom (<output id="syo">50</output>%)<input id="sy" type="range" min="8" max="90" value="50"></label>
+<label class="f">Connect to (optional)<select id="sc"></select></label>
+<label class="f">Pipe length in km (needed when connecting)<input id="sl" type="number" min="0.1" step="0.1" placeholder="1.5"></label>
+<button class="btn go" id="sadd">Add station</button><p class="sub" id="smsg" aria-live="polite"></p></div>
 </section></div>
 <div id="v-leaks" hidden><section class="grid">
 <div class="card"><h3>All leak reports</h3><p class="sub">Move each report from open to resolved.</p>
